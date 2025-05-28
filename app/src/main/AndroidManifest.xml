@@ -23,6 +23,16 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".HomeActivity"
+            android:exported="false"
+            android:label="Home Activity"
+            android:theme="@style/Theme.MindAssessApp"/>
+        <activity
+            android:name=".TestActivity"
+            android:exported="false"
+            android:label="Test Activity"
+            android:theme="@style/Theme.MindAssessApp"/>
     </application>
 
 </manifest>
