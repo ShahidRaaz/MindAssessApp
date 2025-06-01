@@ -33,6 +33,11 @@
             android:exported="false"
             android:label="Test Activity"
             android:theme="@style/Theme.MindAssessApp"/>
+        <activity
+            android:name=".TSubmitActivity"
+            android:exported="false"
+            android:label="Test Submit Activity"
+            android:theme="@style/Theme.MindAssessApp"/>
     </application>
 
 </manifest>

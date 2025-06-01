@@ -1,5 +1,6 @@
 package com.example.mindassessapp
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -22,6 +23,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -40,12 +42,9 @@ class TestActivity : ComponentActivity() {
 
 @Composable
 fun TestScreen() {
-    var selectedOption by remember { mutableStateOf(0) }
-
-    val options = listOf("Option 1", "Option 2", "Option 3", "Option 4")
-
     Column(
-        modifier = Modifier.fillMaxSize().background(Color(0xFFF5F7FE)),
+        modifier = Modifier.fillMaxSize().background(Color(0xFFF5F7FE))
+            .padding(start = 16.dp, end = 16.dp, top = 20.dp, bottom = 12.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.SpaceBetween
 
@@ -141,22 +140,23 @@ fun TestScreen() {
 
         val options = listOf("Option 1", "Option 2", "Option 3", "Option 4")
         var currentIndex by remember { mutableStateOf(0) }
-        val selectedAnswers = remember { mutableStateListOf<Int?>().apply { repeat(questions.size) { add(null) } } }
+        val selectedAnswers =
+            remember { mutableStateListOf<Int?>().apply { repeat(questions.size) { add(null) } } }
 
         Column(
             modifier = Modifier.wrapContentSize(),
             horizontalAlignment = Alignment.CenterHorizontally
-        ){
+        ) {
             // Question Counter
             Row(
                 verticalAlignment = Alignment.CenterVertically
             ) {
-//                Icon(
-//                    painter = painterResource(id = R.drawable.qimg),
-//                    contentDescription = "Question",
-//                    tint = Color(0xFF001A72),
-//                    modifier = Modifier.size(20.dp)
-//                )
+                Icon(
+                    painter = painterResource(id = R.drawable.qimg),
+                    contentDescription = "Question",
+                    tint = Color(0xFF001A72),
+                    modifier = Modifier.size(20.dp)
+                )
 
                 Spacer(modifier = Modifier.width(8.dp))
 
@@ -180,11 +180,13 @@ fun TestScreen() {
 
 
             Card(
-                modifier = Modifier.fillMaxWidth().border(1.dp, color = Color(0xFF00137F),RoundedCornerShape(10.dp)),
+                modifier = Modifier.fillMaxWidth()
+                    .border(1.dp, color = Color(0xFF00137F), RoundedCornerShape(10.dp)),
                 colors = CardDefaults.cardColors(containerColor = Color.White),
             ) {
                 Column(
-                    modifier = Modifier.wrapContentSize().padding(horizontal = 16.dp, vertical = 16.dp),
+                    modifier = Modifier.wrapContentSize()
+                        .padding(horizontal = 16.dp, vertical = 16.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     // Question Text
@@ -229,47 +231,49 @@ fun TestScreen() {
             }
 
         }
-                Spacer(modifier = Modifier.height(36.dp))
+        Spacer(modifier = Modifier.height(36.dp))
 
-                // Navigation Buttons
-                Row(
-                    modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    // Previous Button
-                    Button(
-                        onClick = { if (currentIndex > 0) currentIndex-- },
-                        enabled = currentIndex > 0,
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = Color.White,
-                            contentColor = Color(0xFF00137F),
-                        ),
-                        border = BorderStroke(1.dp, Color(0xFF00137F)),
-                        shape = RoundedCornerShape(12.dp)
-                    ) {
-                        Text("Previous")
+        // Navigation Buttons
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            // Previous Button
+            Button(
+                onClick = { if (currentIndex > 0) currentIndex-- },
+                enabled = currentIndex > 0,
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color.White,
+                    contentColor = Color(0xFF00137F),
+                ),
+                border = BorderStroke(1.dp, Color(0xFF00137F)),
+                shape = RoundedCornerShape(10.dp)
+            ) {
+                Text("Previous")
+            }
+
+            // Next or Submit Button
+            val context = LocalContext.current
+            Button(
+                onClick = {
+                    if (currentIndex < questions.size - 1) {
+                        currentIndex++
+                    } else {
+                        // Submit action here
+                        // Example: show result screen or toast
+                        val intent = Intent(context, TSubmitActivity::class.java)
+                        context.startActivity(intent)
+                        println("Submitted!")
                     }
-
-                    // Next or Submit Button
-                    Button(
-                        onClick = {
-                            if (currentIndex < questions.size - 1) {
-                                currentIndex++
-                            } else {
-                                // Submit action here
-                                // Example: show result screen or toast
-                                println("Submitted!")
-                            }
-                        },
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = Color(0xFF00137F),
-                            contentColor = Color.White
-                        ),
-                        shape = RoundedCornerShape(12.dp)
-                    ) {
-                        Text(if (currentIndex == questions.size - 1) "Submit" else "Next")
-                    }
-                }
-
-                }
+                },
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color(0xFF00137F),
+                    contentColor = Color.White
+                ),
+                shape = RoundedCornerShape(10.dp)
+            ) {
+                Text(if (currentIndex == questions.size - 1) "Submit" else "Next")
+            }
         }
+    }
+}
